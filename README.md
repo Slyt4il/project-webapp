@@ -40,7 +40,11 @@ Install NodeJS
 
     pip install nodejs==0.1.1
 
-Start Dja
+Start the web application.
+
+    ./manage.py runserver
+
+Head over to your localhost on port 8000 (http://localhost:8000/) (http://127.0.0.1:8000/)
 
 ## Deployment
 
