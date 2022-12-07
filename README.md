@@ -46,6 +46,8 @@ Start the web application.
 
 Head over to your localhost on port 8000 (http://localhost:8000/) (http://127.0.0.1:8000/)
 
+You should see a confirmation page if the project is successfully installed.
+
 ## Deployment
 
 **Heroku**
