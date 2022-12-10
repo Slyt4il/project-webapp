@@ -40,8 +40,6 @@ INSTALLED_APPS = [
 
     # Third Party
     'rest_framework',
-    # Internal
-    'twitta',
 ]
 
 MIDDLEWARE = [
