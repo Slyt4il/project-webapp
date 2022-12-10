@@ -32,19 +32,13 @@ If venv is present, activate it.
 
     .venv\Scripts\activate
 
-Requirements should be automatically installed. If not,
+Install required packages.
 
-Install Django
+    pip install -r requirements.txt
 
-    pip install Django==4.1.4
-  
-Install NodeJS
+Install NodeJS on your system via their [website](https://nodejs.org/en/download/) or via Winget.
 
-    pip install nodejs==0.1.1
-
-Install Django REST Framework
-
-    djangorestframework==3.14.0
+    winget install OpenJS.NodeJS
 
 Start the web application.
 
