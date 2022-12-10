@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Third Party
     'rest_framework',
 
+    # Twitta(TM) 100% Proprietary Code 
+    'twittapp',
     'profileapp',
 ]
 

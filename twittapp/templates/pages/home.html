@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block titlebar %}
+Twitta - Twitter without the E.
+{% endblock titlebar %}
+
+{% block content %}
+Welcome to Twitta - Twitter without the E.
+
+<div id='twitts'>
+    Bringing you the freshest news without the censorship... (Cuz we can't afford to moderate our platform.)
+</div>
+
+<div class='row'>
+    <div class='col-md-4 mx-auto col-10'>
+        <form class='form' method='POST' action='/twittit'>
+                {% csrf_token %}
+            <input type='hidden' value='/' name='next' />
+            <textarea class='form-control' name='content' placeholder='Say something to the world...!'></textarea>
+            <button class='btn btn-primary'>Twitt'it</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const twittsElement = document.getElementById('twitts')
+
+    const xhr = new XMLHttpRequest()
+    const method = 'GET'
+    const url = '/twitts'
+    const responseType = 'json'
+
+    function LikeBtn(twitt) {
+        return "<button class='btn btn-primary btn-sm' onclick=handleLiked(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
+    }
+
+    function handleLiked(twitt_id, currentLikes) {
+        return
+    }
+
+    function prettify(twitt) {
+        var formatted = "<div>ID : " + twitt.id + " said " + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>"
+        return formatted
+    }
+    xhr.responseType = responseType
+    xhr.open(method, url)
+    xhr.onload = function() {
+        const listedItems = xhr.response.response
+        var str = ""
+        for (var i=0;i<listedItems.length; i++) {
+            var currentItem = prettify(listedItems[i])
+            str += currentItem
+        }
+        twittsElement.innerHTML = str
+    }
+    xhr.send()
+</script>
+{% endblock content %}

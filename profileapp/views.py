@@ -9,9 +9,6 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
-def index(request):
-    return HttpResponse("<h1>Welcome to TWITTA</h1>")
-
 @login_required(login_url='login')
 def profile(request):
     if request.method == 'POST':
