@@ -22,6 +22,8 @@ Clone the remote repository onto your machine.
 
 Navigate to the project folder with Visual Studio Code terminal or your machine's command prompt.
 
+    cd <project path>
+
 If venv is not already present, create a virtual environment.
 
     python -m venv .venv
@@ -39,6 +41,10 @@ Install Django
 Install NodeJS
 
     pip install nodejs==0.1.1
+
+Install Django REST Framework
+
+    djangorestframework==3.14.0
 
 Start the web application.
 
