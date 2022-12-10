@@ -28,6 +28,7 @@
 
     <main class="main-container">
         <form class = 'container' action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
             <div class="profile-photo-container profile-photo-form-container">
                 <p class="profile-page-heading">Edit your profile</p>
                 <img src="{% static 'images/default.jpg' %}" alt="user-image" width="" srcset="">
@@ -67,4 +68,4 @@
     </script>
 
   </body>
-</html
+</html>
