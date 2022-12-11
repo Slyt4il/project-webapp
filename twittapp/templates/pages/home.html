@@ -15,6 +15,8 @@ Welcome to Twitta - Twitter without the E.
     <a href='profile'>Profile</a>
     <a href='twittit'>Form</a>
     <a href='admin\'>Admin</a>
+    <a href='home'>Home</a>
+    <a href='popular'>Popular</a>
 </div>
 
 <div class='row'>
@@ -130,10 +132,39 @@ Welcome to Twitta - Twitter without the E.
         xhr.onload = function() {
             const listedItems = xhr.response
             var str = ""
-            for (var i = listedItems.length-1; i >= 0; i--) {
+            if (!window.location.href.includes('popular'))
+            {
+                for (var i = listedItems.length-1; i >= 0; i--) {
                 var currentItem = prettify(listedItems[i])
                 str += currentItem
+            }
+            }else {
+                var sortedItems = listedItems
+                for (var i = 0; i < sortedItems.length; i++) {
+                    for (var j = i; j < sortedItems.length; j++)
+                    {
+                        if (sortedItems[j].likes > sortedItems[i].likes)
+                        {
+                            var temp = sortedItems[i]
+                            sortedItems[i] = sortedItems[j]
+                            sortedItems[j] = temp
+                        }
+                    }
+                }
+                for (var i = 0; i < sortedItems.length; i++) {
+                var currentItem = prettify(sortedItems[i])
+                str += currentItem
+            }
         }
+        //hashtag matching
+        const hashtagRegEx = /(^|\s)#([^\d&%$_-]\w{2,49})\b/gis
+            var matches = [...str.matchAll(hashtagRegEx)]
+            for (var i = 0; i < matches.length; i++)
+            {
+                console.log(matches)
+                str = str.replace(matches[i][0], '<span style="color: #0a08b2">' + matches[i][0] + '</span>')
+            }
+
         twittsElement.innerHTML = str
         }
         xhr.send()

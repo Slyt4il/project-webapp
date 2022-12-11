@@ -16,6 +16,9 @@ def is_ajax(request):
 def home_view(request, *arg, **kwargs):
     return render(request, "pages/home.html", context = {}, status = 200)
 
+def popular_view(request, *arg, **kwargs):
+    return render(request, "pages/home.html", context = {}, status = 200)
+
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication])
 @permission_classes([IsAuthenticated])
