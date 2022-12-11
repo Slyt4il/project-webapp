@@ -35,7 +35,7 @@ def login_user(request):
             messages.info(request, f'{username}, You are logged in.')
             return redirect("/")
         else:
-            messages.info(request, 'Wrong passwrod or username')
+            messages.info(request, 'Wrong password or username')
             return redirect('login')
     return render(request, 'profileapp/login_page.html')
 
