@@ -12,6 +12,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         model = Profile
         fields = ['user', 'name', 'title', 'desc', 'profile_img']
 
+class TwittReserializer(serializers.ModelSerializer):
+    timestamp = serializers.DateTimeField(format="%d-%m-%Y")
+    class Meta:
+        model = Twitt
+        fields = ['user', 'timestamp']
+
 class TwittSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
     class Meta:

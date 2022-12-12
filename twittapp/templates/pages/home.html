@@ -210,13 +210,9 @@ Twitta - Twitter without the E.
         xhr.open(method, url)
         xhr.onload = function() {
             document.getElementById('username-field').innerHTML = xhr.response[0].name
-            console.log(xhr.response[0].profile_img)
         }
         xhr.send()
     }
-
-    loadTwitts(twittsElementInDoc)
-    loadProfiles()
 
     function LikeBtn(twitt) {
         return "<button class='btn btn-primary btn-sm' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
@@ -243,9 +239,67 @@ Twitta - Twitter without the E.
         return
     }
 
+    window.onload = function () {
+        loadProfiles()
+        loadTwitts(twittsElementInDoc)
+        setInterval(function(){loadTwitts(twittsElementInDoc)},1500);
+        setInterval(function(){loadProfiles(twittsElementInDoc)},10000);
+    }
+
+    var userResponse = {}
+    var profileResponse = {}
+
+    function getOwner(twitt_id) {
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = '/api/twitts/' + twitt_id + '/owner'
+        const responseType = 'json'
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            getProfile(xhr.response[0].user)
+            userResponse[twitt_id] = xhr.response[0]
+        }
+        xhr.send()
+    }
+
+    function getProfile(user_id) {
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = '/api/profiles/' + user_id
+        const responseType = 'json'
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            profileResponse[user_id] = xhr.response[0]
+        }
+        xhr.send()
+    }
+
     function prettify(twitt) {
-        var formatted = "<div class='col-12 mb-4 border-top'>(" + twitt.id + ") " + twitt.user + " " + "<br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" + "<p>" + twitt.timestamp + "</p>"
+        // gigachad dev:
+        getOwner(twitt.id)
+        var datetime = 'Fetching data---ID:2---'
+        var name = 'Fetching data---ID:2---'
+        var regex = /Fetching data---ID:(\d)---/;
+        var getid = name.match(regex)[1]
+
+        var user
+        if (userResponse[twitt.id] !== undefined)
+        {
+            datetime = datetime.replace(regex, userResponse[twitt.id]['timestamp'])
+            user = userResponse[twitt.id]['user']
+        }
+
+        if (user !== undefined && profileResponse[user] !== undefined)
+        {
+            name = name.replace(regex, profileResponse[user]['name'])
+        }
+        
+
+        var formatted = "<div class='col-12 mb-4 border-top'>(" + twitt.id + ") " + name + " " + "<br><br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" + "<p>" + datetime + "</p>"
         return formatted
     }
+
 </script>
 {% endblock content %}

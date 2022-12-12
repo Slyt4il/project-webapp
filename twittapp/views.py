@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from profileapp.models import Profile
 from .forms import TwittForm
 from .models import Twitt
-from .serializers import ProfileSerializer, TwittSerializer, TwittActionSerializer
+from .serializers import ProfileSerializer, TwittReserializer, TwittSerializer, TwittActionSerializer
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -85,6 +85,20 @@ def twitt_like_view(request, *args, **kwargs):
 @api_view(['GET'])
 def twitt_profile_view(request, *arg, **kwargs):
     queryset = Profile.objects.filter(user=request.user)
+    serializer = ProfileSerializer(queryset, many=True)
+    
+    return Response(serializer.data, status=200)
+
+@api_view(['GET'])
+def twitt_owner_view(request, twitt_id, *arg, **kwargs):
+    queryset = Twitt.objects.filter(id=twitt_id)
+    serializer = TwittReserializer(queryset, many=True)
+    
+    return Response(serializer.data, status=200)
+
+@api_view(['GET'])
+def twitt_profile_lookup_view(request, user_id, *arg, **kwargs):
+    queryset = Profile.objects.filter(id=user_id)
     serializer = ProfileSerializer(queryset, many=True)
     
     return Response(serializer.data, status=200)
