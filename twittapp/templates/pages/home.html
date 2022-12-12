@@ -8,7 +8,7 @@ Twitta - Twitter without the E
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" style='position: sticky; top: 0px; z-index: 999;'>
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                     <span class="fs-5 d-none d-sm-inline">Twitta</span>
                 </a>
@@ -22,6 +22,10 @@ Twitta - Twitter without the E
                     <li>
                         <a href="popular" class="nav-link px-0 align-middle">
                             <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Popular</span></a>
+                    </li>
+                    <li>
+                        <a href="api/profiles/2/twitts" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Profile View</span></a>
                     </li>
                 </ul>
                 <hr>
@@ -43,7 +47,7 @@ Twitta - Twitter without the E
             </div>
         </div>
         <div class="col py-3">
-            <form class='form' id='twitt-create-form' method='POST' action='/twittit'>
+            <form class='form' style='position: sticky; top: 16px; z-index: 999;' id='twitt-create-form' method='POST' action='/twittit'>
                 {% csrf_token %}
                 <div class='d-none alert alert-danger' id='twitt-create-error'></div>
                 <input type='hidden' value='/' name='next' />
@@ -156,10 +160,20 @@ Twitta - Twitter without the E
 
     const twittsElementInDoc = document.getElementById('twitts')
 
-    function loadTwitts(twittsElement) {
+    function loadTwitts(twittsElement, url = '/twitts') {
+
+        if (window.location.href.includes('?profiletwittslookup='))
+        {
+            queriedUser = (window.location.href.match(/\d+$/) || []).pop();
+            url = '/api/profiles/' + queriedUser + '/twitts'
+        } else
+        {
+            url = '/twitts'
+        }
+        console.log(url)
+
         const xhr = new XMLHttpRequest()
         const method = 'GET'
-        const url = '/twitts'
         const responseType = 'json'
         xhr.responseType = responseType
         xhr.open(method, url)
@@ -191,11 +205,11 @@ Twitta - Twitter without the E
             }
         }
         //hashtag matching
-        const hashtagRegEx = /(^|\s)#([^\d&%$_-]\w{2,49})\b/gis
+        const hashtagRegEx = /(^|\s)[#|@]([^\d&%$_-]\w{2,49})\b/gis
             var matches = [...str.matchAll(hashtagRegEx)]
             for (var i = 0; i < matches.length; i++)
             {
-                str = str.replace(matches[i][0], '<span style="color: #0a08b2">' + matches[i][0] + '</span>')
+                str = str.replace(matches[i][0], '<span style="color: #1E90FF">' + matches[i][0] + '</span>')
             }
 
         twittsElement.innerHTML = str
@@ -218,9 +232,12 @@ Twitta - Twitter without the E
     }
 
     function LikeBtn(twitt) {
-        return "<button class='btn btn-primary btn-sm' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
+        return "<button class='btn btn-primary btn-sm' style='font-weight:bold;' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
     }
     
+    function DeleteBtn(twitt) {
+        return "<button class='btn btn-primary btn-sm' style='background-color:crimson;' onclick=onDelete(" + twitt.id + ")> Delete</button>"
+    }
 
     function onLike(twitt_id, currentLikes) {
         const url = "/api/twitts/action"
@@ -236,6 +253,47 @@ Twitta - Twitter without the E
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
         xhr.setRequestHeader('X-CSRFToken', csrftoken)
         xhr.onload = function() {
+            loadTwitts(twittsElementInDoc)
+        }
+        xhr.send(data)
+
+        return
+    }
+
+    function onDelete(twitt_id) {
+
+        if (!confirm("You are about to delete a Twitt. (This cannot be undone!)"))
+        {
+            return
+        }
+
+        const url = "/api/twitts/" + twitt_id + "/delete"
+        const method = "DELETE"
+        const data = JSON.stringify({
+            id : twitt_id
+        })
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.setRequestHeader('HTTP_X_REQUESTED_WITH', 'XMLHttpRequest')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        xhr.setRequestHeader('X-CSRFToken', csrftoken)
+        xhr.onload = function() {
+            {
+                    if (xhr.status === 200)
+                    {
+                        alert('Twitt has been deleted.')
+                    } else if (xhr.status === 401 ||xhr.status === 404) {
+                            alert('You do not have permissions to delete this Twitt.')
+                        } else {
+                            alert('An error occured. Please try again later.')
+                        }
+                        console.log(contentErrorMessage)
+                    }
+                    xhr.onerror = function() {
+                        alert('A fatal error occured. Please try again later.')
+                    }
+
             loadTwitts(twittsElementInDoc)
         }
         xhr.send(data)
@@ -311,8 +369,9 @@ Twitta - Twitter without the E
         }
         
 
-        var formatted = "<div class='col-12 mb-4 border-top'><span style='font-weight: bold;'> " + name + "</span>" + "<br><br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" +
-        "<p style='font-style:italic; font-weight: 300;'>" + datetime + "</p>"
+        var formatted = "<div class='col-12 mb-4 border-top'><a style='text-decoration:none; color:black;' href='/?profiletwittslookup=" + user + "'><span style='font-weight: bold;'>&nbsp " + name + "</span></a>" + "<br><br>&nbsp " + twitt.content + "</div><div class='btn-group'>&nbsp " + LikeBtn(twitt) + DeleteBtn(twitt) + "</div>" +
+        "<p style='font-style:italic; font-weight: 300;'>&nbsp " + datetime + "</p>"
+
         return formatted
     }
 
