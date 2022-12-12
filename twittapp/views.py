@@ -38,6 +38,13 @@ def twitt_list_view(request, *arg, **kwargs):
     return Response(serializer.data, status=200)
 
 @api_view(['GET'])
+def twitt_profile_list_view(request, user_id, *arg, **kwargs):
+    queryset = Twitt.objects.filter(user = user_id)
+    serializer = TwittSerializer(queryset, many=True)
+    
+    return Response(serializer.data, status=200)
+
+@api_view(['GET'])
 def twitt_detailed_view(request, twitt_id, *arg, **kwargs):
     queryset = Twitt.objects.filter(id=twitt_id)
     if not queryset.exists():

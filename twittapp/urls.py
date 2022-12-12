@@ -15,4 +15,5 @@ urlpatterns = [
     path('api/twitts/<int:twitt_id>/owner', views.twitt_owner_view, name = "getowner"),
     path('api/twitts/action', views.twitt_like_view, name = "twittaction"),
     path('api/profiles/<int:user_id>', views.twitt_profile_lookup_view, name = "profilelookup"),
+    path('api/profiles/<int:user_id>/twitts', views.twitt_profile_list_view, name = "profilelist"),
 ]
