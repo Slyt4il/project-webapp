@@ -13,7 +13,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ['user', 'name', 'title', 'desc', 'profile_img']
 
 class TwittReserializer(serializers.ModelSerializer):
-    timestamp = serializers.DateTimeField(format="%d-%m-%Y")
+    timestamp = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
     class Meta:
         model = Twitt
         fields = ['user', 'timestamp']

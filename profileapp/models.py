@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete= models.CASCADE)
     name = models.CharField(default = 'New User', max_length=200, null=True)
-    title = models.CharField(default = 'This is the default, title change it in profile.', max_length=200, null=True)
-    desc_text = 'Hey, there this is a default text description about you that you can change on after clicking on "Edit" or going to your profile page.'
+    title = models.CharField(default = 'Newbie', max_length=200, null=True)
+    desc_text = 'When something is important enough, you do it even if the odds are not in your favor.'
     desc = models.CharField(default = desc_text, max_length=200, null=True)
     profile_img =  models.ImageField(default = 'media/profile_images/default.jpg', upload_to = 'media/profile_images/', null = True, blank = True)
 
