@@ -115,6 +115,7 @@ Twitta - Twitter without the E
                 console.log(formattedTwitt)
                 const originalHTML = twittsElementInDoc.innerHTML
                 twittsElementInDoc.innerHTML = formattedTwitt + originalHTML
+                handleTwittFormError('', false)
                 thisForm.reset()
             } else if (xhr.status === 400) {
                 const errorResponse = xhr.response
@@ -245,14 +246,20 @@ Twitta - Twitter without the E
     window.onload = function () {
         loadProfiles()
         loadTwitts(twittsElementInDoc)
-        setInterval(function(){loadTwitts(twittsElementInDoc)},1500);
-        setInterval(function(){loadProfiles(twittsElementInDoc)},10000);
+        setInterval(function(){loadTwitts(twittsElementInDoc)},3000);
+        setInterval(function(){loadProfiles(twittsElementInDoc)},15000);
     }
 
     var userResponse = {}
     var profileResponse = {}
 
     function getOwner(twitt_id) {
+
+        if (twitt_id in userResponse)
+        {
+            return
+        }
+
         const xhr = new XMLHttpRequest()
         const method = 'GET'
         const url = '/api/twitts/' + twitt_id + '/owner'
@@ -267,6 +274,12 @@ Twitta - Twitter without the E
     }
 
     function getProfile(user_id) {
+
+        if (user_id in profileResponse)
+        {
+            return
+        }
+
         const xhr = new XMLHttpRequest()
         const method = 'GET'
         const url = '/api/profiles/' + user_id
