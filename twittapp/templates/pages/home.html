@@ -1,38 +1,71 @@
 {% extends 'base.html' %}
 
 {% block titlebar %}
-Twitta - Twitter without the E.
+Twitta - Twitter without the E
 {% endblock titlebar %}
 
 {% block content %}
-Welcome to Twitta - Twitter without the E.
-
-<div>
-    <br>
-    <p>QUICK LINKS - REMOVE THIS</p>
-    <a href='login'>Login</a>
-    <a href='register'>Register</a>
-    <a href='profile'>Profile</a>
-    <a href='twittit'>Form</a>
-    <a href='admin\'>Admin</a>
-    <a href='home'>Home</a>
-    <a href='popular'>Popular</a>
-</div>
-
-<div class='row'>
-    <div class='col-md-4 mx-auto col-10'>
-        <form class='form' id='twitt-create-form' method='POST' action='/twittit'>
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="fs-5 d-none d-sm-inline">Twitta</span>
+                </a>
+                <span>Twitter without the E.</span>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li class="nav-item">
+                        <a href="home" class="nav-link align-middle px-0">
+                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="popular" class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Popular</span></a>
+                    </li>
+                </ul>
+                <hr>
+                <span id='user-quotes' style='font-style:italic; padding:0.5em; margin-bottom: +8px;'>"When something is important enough, you do it even if the odds are not in your favor."</span>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img id='profile-image' src="media\profile_images\default.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span id='username-field' class="d-none d-sm-inline mx-1">GUEST</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" href="admin/">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="profile">Profile</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="logout">Sign out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col py-3">
+            <form class='form' id='twitt-create-form' method='POST' action='/twittit'>
                 {% csrf_token %}
-            <div class='d-none alert alert-danger' id='twitt-create-error'></div>
-            <input type='hidden' value='/' name='next' />
-            <textarea required='required' class='form-control' name='content' placeholder='Say something to the world...!'></textarea>
-            <button class='btn btn-primary' style="float: right;" >Twitt'it</button>
-        </form>
+                <div class='d-none alert alert-danger' id='twitt-create-error'></div>
+                <input type='hidden' value='/' name='next' />
+                <textarea required='required' class='form-control' name='content' placeholder='Say something to the world...!'></textarea>
+                <button class='btn btn-primary' style="float: right;
+                background:#03a9f4;
+                transition:0.6s;
+                border:4px solid white;
+                border-radius:2em;
+                color:white;
+                font-style:italic;
+                padding:0.5em;
+                margin-top: +5px; 
+                transition:0.6s;" >Twitt'it</button>
+                
+            </form>
+            <div id='twitts'>
+                Bringing you the freshest news without the censorship... (Cuz we can't afford to moderate our platform.)
+            </div>
+            <a href="#" id="back-to-top" class="back-to-top" style="display: inline;">Top</a>
+        </div>
     </div>
-</div>
-
-<div id='twitts'>
-    Bringing you the freshest news without the censorship... (Cuz we can't afford to moderate our platform.)
 </div>
 
 <script>
@@ -161,7 +194,6 @@ Welcome to Twitta - Twitter without the E.
             var matches = [...str.matchAll(hashtagRegEx)]
             for (var i = 0; i < matches.length; i++)
             {
-                console.log(matches)
                 str = str.replace(matches[i][0], '<span style="color: #0a08b2">' + matches[i][0] + '</span>')
             }
 
@@ -170,11 +202,24 @@ Welcome to Twitta - Twitter without the E.
         xhr.send()
     }
 
-    loadTwitts(twittsElementInDoc)
+    function loadProfiles() {
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = '/twitta'
+        const responseType = 'json'
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            document.getElementById('username-field').innerHTML = xhr.response[0].name
+            document.getElementById('user-quotes').innerHTML = "\"" + xhr.response[0].desc + "\""
+        }
+        xhr.send()
+    }
 
     function LikeBtn(twitt) {
         return "<button class='btn btn-primary btn-sm' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
     }
+    
 
     function onLike(twitt_id, currentLikes) {
         const url = "/api/twitts/action"
@@ -197,9 +242,130 @@ Welcome to Twitta - Twitter without the E.
         return
     }
 
+    window.onload = function () {
+        loadProfiles()
+        loadTwitts(twittsElementInDoc)
+        setInterval(function(){loadTwitts(twittsElementInDoc)},1500);
+        setInterval(function(){loadProfiles(twittsElementInDoc)},10000);
+    }
+
+    var userResponse = {}
+    var profileResponse = {}
+
+    function getOwner(twitt_id) {
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = '/api/twitts/' + twitt_id + '/owner'
+        const responseType = 'json'
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            getProfile(xhr.response[0].user)
+            userResponse[twitt_id] = xhr.response[0]
+        }
+        xhr.send()
+    }
+
+    function getProfile(user_id) {
+        const xhr = new XMLHttpRequest()
+        const method = 'GET'
+        const url = '/api/profiles/' + user_id
+        const responseType = 'json'
+        xhr.responseType = responseType
+        xhr.open(method, url)
+        xhr.onload = function() {
+            profileResponse[user_id] = xhr.response[0]
+        }
+        xhr.send()
+    }
+
     function prettify(twitt) {
-        var formatted = "<div>ID : " + twitt.id + " " + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" + "<p>" + twitt.timestamp + "</p>"
+        // gigachad dev:
+        getOwner(twitt.id)
+        var datetime = 'Fetching data...'
+        var name = 'Fetching data...'
+
+        var user
+        if (userResponse[twitt.id] !== undefined)
+        {
+            datetime = userResponse[twitt.id]['timestamp'] + "<span style='font-style:italic; font-weight: 300;'>" + " via Twittapp (" + twitt.id + ")</span>"
+            user = userResponse[twitt.id]['user']
+        }
+
+        if (user !== undefined && profileResponse[user] !== undefined)
+        {
+            name = profileResponse[user]['name'] + "<span style='font-weight: 200; font-size: smaller;'> &nbsp[" + profileResponse[user]['title'] + "]</span>"
+        }
+        
+
+        var formatted = "<div class='col-12 mb-4 border-top'><span style='font-weight: bold;'> " + name + "</span>" + "<br><br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" +
+        "<p style='font-style:italic; font-weight: 300;'>" + datetime + "</p>"
         return formatted
     }
+
+    
+  var link = document.getElementById("back-to-top");
+  var amountScrolled = 250;
+
+  window.addEventListener('scroll', function(e) {
+      if ( window.pageYOffset > amountScrolled ) {
+          link.classList.add('show');
+      } else {
+          link.className = 'back-to-top';
+      }
+  });  
+  link.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      var distance = 0 - window.pageYOffset;
+      var increments = distance/(500/256); // distance/(500/16)
+      function animateScroll() {
+          window.scrollBy(0, increments);
+          if (window.pageYOffset <= document.body.offsetTop) {
+              clearInterval(runAnimation);
+          }
+      };
+      // Loop the animation function
+      var runAnimation = setInterval(animateScroll, 16); //16
+  });
+
 </script>
+
+<style>
+    .back-to-top {
+      background-color: #000000;
+      color: #FFFFFF;
+      opacity: 0;
+      transition: opacity .6s ease-in-out;
+      z-index: 999;
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 50px;
+      height: 50px;
+      box-sizing: border-box;
+      border-radius: 40%;
+    }
+  
+    a.back-to-top {
+      font-weight: 1000;
+      letter-spacing: 2px;
+      font-size: 14px;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.6;
+      padding-left: 2px;
+      padding-top: 14px;
+    }
+
+    .back-to-top:hover, .back-to-top:focus, .back-to-top:visited {
+    color: #FFFFFF;
+  }
+
+  .back-to-top.show {
+    opacity: 1;
+  }
+</style>
+
+
 {% endblock content %}
