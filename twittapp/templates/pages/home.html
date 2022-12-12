@@ -279,21 +279,19 @@ Twitta - Twitter without the E.
     function prettify(twitt) {
         // gigachad dev:
         getOwner(twitt.id)
-        var datetime = 'Fetching data---ID:2---'
-        var name = 'Fetching data---ID:2---'
-        var regex = /Fetching data---ID:(\d)---/;
-        var getid = name.match(regex)[1]
+        var datetime = 'Fetching data...'
+        var name = 'Fetching data...'
 
         var user
         if (userResponse[twitt.id] !== undefined)
         {
-            datetime = datetime.replace(regex, userResponse[twitt.id]['timestamp'])
+            datetime = userResponse[twitt.id]['timestamp']
             user = userResponse[twitt.id]['user']
         }
 
         if (user !== undefined && profileResponse[user] !== undefined)
         {
-            name = name.replace(regex, profileResponse[user]['name'])
+            name = profileResponse[user]['name']
         }
         
 
