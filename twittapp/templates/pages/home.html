@@ -10,33 +10,29 @@ Twitta - Twitter without the E
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" style='position: sticky; top: 0px; z-index: 999;'>
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">Twitta</span>
+                    <span class="fs-4 d-none d-sm-inline">Twitta</span>
                 </a>
-                <span>Twitter without the E.</span>
+                <span class="fs-6 d-none d-md-inline">Twitter without the E</span>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
                         <a href="home" class="nav-link align-middle px-0">
-                            <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                            <i class="fs-4 bi-house-fill"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
                         </a>
                     </li>
                     <li>
                         <a href="popular" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Popular</span></a>
-                    </li>
-                    <li>
-                        <a href="api/profiles/2/twitts" class="nav-link px-0 align-middle">
-                            <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Profile View</span></a>
+                            <i class="fs-4 bi-graph-up"></i> <span class="ms-1 d-none d-sm-inline">Popular</span></a>
                     </li>
                 </ul>
                 <hr>
-                <span id='user-quotes' style='font-style:italic; padding:0.5em; margin-bottom: +8px;'>"When something is important enough, you do it even if the odds are not in your favor."</span>
+                <span id='user-quotes' class="fs-6 d-none d-lg-inline" style='font-style:italic; padding:0.5em; margin-bottom: +8px;'>"When something is important enough, you do it even if the odds are not in your favor."</span>
                 <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img id='profile-image' src="media\profile_images\default.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                        <span id='username-field' class="d-none d-sm-inline mx-1">GUEST</span>
+                        <img id='profile-image' src="media\profile_images\default.jpg" alt="" width="30" height="30" class="rounded-circle">
+                        <span id='username-field' class="d-none d-md-inline mx-1">GUEST</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="admin/">Dashboard</a></li>
+                        <li><a class="dropdown-item" href="admin/">Admin</a></li>
                         <li><a class="dropdown-item" href="profile">Profile</a></li>
                         <li>
                             <hr class="dropdown-divider">
@@ -52,22 +48,25 @@ Twitta - Twitter without the E
                 <div class='d-none alert alert-danger' id='twitt-create-error'></div>
                 <input type='hidden' value='/' name='next' />
                 <textarea required='required' class='form-control' name='content' placeholder='Say something to the world...!'></textarea>
-                <button class='btn btn-primary' style="float: right;
-                background:#03a9f4;
-                transition:0.6s;
-                border:4px solid white;
-                border-radius:2em;
-                color:white;
-                font-style:italic;
-                padding:0.5em;
-                margin-top: +5px; 
-                transition:0.6s;" >Twitt'it</button>
+                <button class='btn btn-primary' style="
+                    float:right;
+                    background:#03a9f4;
+                    transition:0.6s;
+                    border:4px solid white;
+                    border-radius:2em;
+                    color:white;
+                    font-style:italic;
+                    padding:0.5em;
+                    margin-top: +5px; 
+                    transition:0.6s;" >Twitt'it
+                </button>
+                
                 
             </form>
             <div id='twitts'>
                 Bringing you the freshest news without the censorship... (Cuz we can't afford to moderate our platform.)
             </div>
-            <a href="#" id="back-to-top" class="back-to-top" style="display: inline;">Top</a>
+            <a href="#" id="back-to-top" class="back-to-top bi-arrow-up-square-fill" style="display: inline;">Top</a>
         </div>
     </div>
 </div>
@@ -438,6 +437,7 @@ Twitta - Twitter without the E
     opacity: 1;
   }
 </style>
+
 
 
 {% endblock content %}
