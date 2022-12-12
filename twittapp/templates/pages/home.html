@@ -195,7 +195,7 @@ Twitta - Twitter without the E
             var matches = [...str.matchAll(hashtagRegEx)]
             for (var i = 0; i < matches.length; i++)
             {
-                str = str.replace(matches[i][0], '<span style="color: #0a08b2">' + matches[i][0] + '</span>')
+                str = str.replace(matches[i][0], '<span style="color: #1E90FF">' + matches[i][0] + '</span>')
             }
 
         twittsElement.innerHTML = str
@@ -218,9 +218,12 @@ Twitta - Twitter without the E
     }
 
     function LikeBtn(twitt) {
-        return "<button class='btn btn-primary btn-sm' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
+        return "<button class='btn btn-primary btn-sm' style='font-weight:bold;' onclick=onLike(" + twitt.id + "," + twitt.likes + ")>" + twitt.likes + " Likes</button>"
     }
     
+    function DeleteBtn(twitt) {
+        return "<button class='btn btn-primary btn-sm' style='background-color:crimson;' onclick=onDelete(" + twitt.id + ")> Delete</button>"
+    }
 
     function onLike(twitt_id, currentLikes) {
         const url = "/api/twitts/action"
@@ -236,6 +239,47 @@ Twitta - Twitter without the E
         xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
         xhr.setRequestHeader('X-CSRFToken', csrftoken)
         xhr.onload = function() {
+            loadTwitts(twittsElementInDoc)
+        }
+        xhr.send(data)
+
+        return
+    }
+
+    function onDelete(twitt_id) {
+
+        if (!confirm("You are about to delete a Twitt. (This cannot be undone!)"))
+        {
+            return
+        }
+
+        const url = "/api/twitts/" + twitt_id + "/delete"
+        const method = "DELETE"
+        const data = JSON.stringify({
+            id : twitt_id
+        })
+        const xhr = new XMLHttpRequest()
+        xhr.open(method, url)
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.setRequestHeader('HTTP_X_REQUESTED_WITH', 'XMLHttpRequest')
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+        xhr.setRequestHeader('X-CSRFToken', csrftoken)
+        xhr.onload = function() {
+            {
+                    if (xhr.status === 200)
+                    {
+                        alert('Twitt has been deleted.')
+                    } else if (xhr.status === 401 ||xhr.status === 404) {
+                            alert('You do not have permissions to delete this Twitt.')
+                        } else {
+                            alert('An error occured. Please try again later.')
+                        }
+                        console.log(contentErrorMessage)
+                    }
+                    xhr.onerror = function() {
+                        alert('A fatal error occured. Please try again later.')
+                    }
+
             loadTwitts(twittsElementInDoc)
         }
         xhr.send(data)
@@ -311,7 +355,7 @@ Twitta - Twitter without the E
         }
         
 
-        var formatted = "<div class='col-12 mb-4 border-top'><span style='font-weight: bold;'> " + name + "</span>" + "<br><br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + "</div>" +
+        var formatted = "<div class='col-12 mb-4 border-top'><span style='font-weight: bold;'> " + name + "</span>" + "<br><br>" + twitt.content + "</div><div class='btn-group'>" + LikeBtn(twitt) + DeleteBtn(twitt) + "</div>" +
         "<p style='font-style:italic; font-weight: 300;'>" + datetime + "</p>"
         return formatted
     }
