@@ -1,22 +1,25 @@
 from rest_framework import serializers
 
+from profileapp.models import Profile
+
 from .models import Twitt
 
 MAX_TWITT_LENGTH = 512
 TWITT_ACTION_OPTIONS = ['like']
 
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ['user', 'name', 'title', 'desc', 'profile_img']
+
 class TwittSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField(read_only=True)
-    timestamp = serializers.SerializerMethodField(read_only=True)
     class Meta:
         model = Twitt
         fields = ['id', 'content', 'likes', 'timestamp']
-    
+
     def get_likes(self, obj):
         return obj.likes
-    
-    def get_timestamp(self, obj):
-        return obj.timestamp
 
     def validate_content(self, attrs):
         if len(attrs) > MAX_TWITT_LENGTH:

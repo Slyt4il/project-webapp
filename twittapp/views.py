@@ -6,9 +6,10 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from profileapp.models import Profile
 from .forms import TwittForm
 from .models import Twitt
-from .serializers import TwittSerializer, TwittActionSerializer
+from .serializers import ProfileSerializer, TwittSerializer, TwittActionSerializer
 
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -25,7 +26,7 @@ def popular_view(request, *arg, **kwargs):
 def twitt_create_view(request, *args, **kwargs):
     serializer = TwittSerializer(data=request.POST or None)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(user = request.user)
+        serializer.save(user=request.user)
         return Response(serializer.data, status=201)
     return Response({}, status=400)
 
@@ -80,6 +81,13 @@ def twitt_like_view(request, *args, **kwargs):
             return Response(serializer.data, status=200)
 
     return Response({"message" : "Twitt liked!"}, status=200)
+
+@api_view(['GET'])
+def twitt_profile_view(request, *arg, **kwargs):
+    queryset = Profile.objects.filter(user=request.user)
+    serializer = ProfileSerializer(queryset, many=True)
+    
+    return Response(serializer.data, status=200)
 
 def DEPRACATED_twitt_create_view(request, *arg, **kwargs):
     user = request.user

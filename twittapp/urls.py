@@ -7,6 +7,7 @@ urlpatterns = [
     path('popular', views.popular_view, name = 'popular'),
     path('twitts', views.twitt_list_view, name = 'list'),
     path('twittit', views.twitt_create_view, name = 'create'),
+    path('twitta', views.twitt_profile_view, name = 'profile'),
 
     #APIs
     path('api/twitts/<int:twitt_id>', views.twitt_detailed_view, name = 'detailed'),
