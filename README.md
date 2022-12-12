@@ -2,7 +2,7 @@
 
 A web application as part of Chulalongkorn University Introduction to Information System course.
 
-This project's demo is available at TwittaInfosys(http://twittainfosys.pythonanywhere.com/)
+This project's demo is available at [TwittaInfosys](http://twittainfosys.pythonanywhere.com/)
 
 ## Getting Started
 
@@ -58,7 +58,7 @@ Head over to your localhost on port 8000 (http://localhost:8000/) (http://127.0.
 
 **Pythonanywhere**
 
-This project's demo is available at TwittaInfosys(http://twittainfosys.pythonanywhere.com/)
+This project's demo is available at [TwittaInfosys](http://twittainfosys.pythonanywhere.com/)
 
 ## Contributing
 
