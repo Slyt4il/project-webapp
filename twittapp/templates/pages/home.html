@@ -161,10 +161,15 @@ Twitta - Twitter without the E
 
     function loadTwitts(twittsElement, url = '/twitts') {
 
+        var queriedTag = ''
+
         if (window.location.href.includes('?profiletwittslookup='))
         {
             queriedUser = (window.location.href.match(/\d+$/) || []).pop();
             url = '/api/profiles/' + queriedUser + '/twitts'
+        } else if ((window.location.href.includes('?taggedtwittslookup=')))
+        {
+            queriedTag = (window.location.href.match(/[#|@]\w+$/) || []).pop();
         } else
         {
             url = '/twitts'
@@ -183,6 +188,10 @@ Twitta - Twitter without the E
             {
                 for (var i = listedItems.length-1; i >= 0; i--) {
                 var currentItem = prettify(listedItems[i])
+                if (queriedTag && !currentItem.includes(queriedTag))
+                {
+                    continue
+                }
                 str += currentItem
             }
             }else {
@@ -200,6 +209,10 @@ Twitta - Twitter without the E
                 }
                 for (var i = 0; i < sortedItems.length; i++) {
                 var currentItem = prettify(sortedItems[i])
+                if (queriedTag && !currentItem.includes(queriedTag))
+                {
+                    continue
+                }
                 str += currentItem
             }
         }
@@ -208,7 +221,7 @@ Twitta - Twitter without the E
             var matches = [...str.matchAll(hashtagRegEx)]
             for (var i = 0; i < matches.length; i++)
             {
-                str = str.replace(matches[i][0], '<span style="color: #1E90FF">' + matches[i][0] + '</span>')
+                str = str.replaceAll(matches[i][0], "<a href='?taggedtwittslookup=" + matches[i][0].trim() + "'style='text-decoration: none; color: #1E90FF'><span>" + matches[i][0] + '</span></a>')
             }
 
         twittsElement.innerHTML = str
@@ -366,9 +379,12 @@ Twitta - Twitter without the E
         {
             name = profileResponse[user]['name'] + "<span style='font-weight: 200; font-size: smaller;'> &nbsp[" + profileResponse[user]['title'] + "]</span>"
         }
-        
+        var nameColor = 'black'
+        if (user == 1 || user == 2) {
+            nameColor = '#BF40BF'
+        }
 
-        var formatted = "<div class='col-12 mb-4 border-top'><a style='text-decoration:none; color:black;' href='/?profiletwittslookup=" + user + "'><span style='font-weight: bold;'>&nbsp " + name + "</span></a>" + "<br><br>&nbsp " + twitt.content + "</div><div class='btn-group'>&nbsp " + LikeBtn(twitt) + DeleteBtn(twitt) + "</div>" +
+        var formatted = "<div class='col-12 mb-4 border-top'><a style='text-decoration:none; color:" + nameColor + ";' href='?profiletwittslookup=" + user + "'><span style='font-weight: bold;'>&nbsp " + name + "</span></a>" + "<br><br>&nbsp " + twitt.content + "</div><div class='btn-group'>&nbsp " + LikeBtn(twitt) + DeleteBtn(twitt) + "</div>" +
         "<p style='font-style:italic; font-weight: 300;'>&nbsp " + datetime + "</p>"
 
         return formatted
