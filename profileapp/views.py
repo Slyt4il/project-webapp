@@ -59,5 +59,10 @@ def register_user(request):
 @login_required(login_url='login')   
 def logout_user(request):
     logout(request)
+    storage = messages.get_messages(request)
+    for _ in storage:
+        pass
+    for _ in list(storage._loaded_messages):
+        del storage._loaded_messages[0]
     messages.info(request, 'You logged out successfully')
     return redirect('login')
