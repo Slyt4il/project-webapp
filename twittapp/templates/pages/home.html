@@ -15,7 +15,7 @@ Twitta - Twitter without the E
                 <span class="fs-6 d-none d-md-inline">Twitter without the E</span>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li class="nav-item">
-                        <a href="home" class="nav-link align-middle px-0">
+                        <a href="{% url 'home' %}" class="nav-link align-middle px-0">
                             <i class="fs-4 bi-house-fill"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
                         </a>
                     </li>
@@ -366,7 +366,11 @@ Twitta - Twitter without the E
         {
             name = profileResponse[user]['name'] + "<span style='font-weight: 200; font-size: smaller;'> &nbsp[" + profileResponse[user]['title'] + "]</span>"
         }
-        
+        else if (user !== undefined && profileResponse[user] == undefined)
+        {
+            name = "New User" + "<span style='font-weight: 200; font-size: smaller;'> &nbsp["+"No Title"+"]</span>"
+        }
+    
 
         var formatted = "<div class='col-12 mb-4 border-top'><a style='text-decoration:none; color:black;' href='/?profiletwittslookup=" + user + "'><span style='font-weight: bold;'>&nbsp " + name + "</span></a>" + "<br><br>&nbsp " + twitt.content + "</div><div class='btn-group'>&nbsp " + LikeBtn(twitt) + DeleteBtn(twitt) + "</div>" +
         "<p style='font-style:italic; font-weight: 300;'>&nbsp " + datetime + "</p>"
